@@ -19,3 +19,7 @@ config
 # IDE and OS files
 .DS_Store
 .vscode/
+
+# Downloaded data and generated outputs
+data/
+output/
