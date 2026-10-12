@@ -1,0 +1,36 @@
+
+name: Deploy AWS Glue Script
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/glue_join_customers_orders.py"
+      - ".github/workflows/deploy-glue-script.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Upload Glue script to S3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::011877214632:role/GitHubActionsGlueDeployRole
+          aws-region: ap-south-1
+
+      - name: Upload Glue script to S3
+        run: |
+          aws s3 cp \
+            src/glue_join_customers_orders.py \
+            s3://aman-aws-de-2026-bucket1/scripts/glue_join_customers_orders.py
